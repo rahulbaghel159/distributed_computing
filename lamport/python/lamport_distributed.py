@@ -10,18 +10,15 @@ import time
 def local_time(counter):
     return ' (LAMPORT_TIME={}, LOCAL_TIME={})'.format(counter,datetime.now())
 
-def calc_recv_timestamp(recv_time_stamp, counter):
-    return max(recv_time_stamp, counter) + 1
-
 def event(pid, counter):
     counter += 1
     print('Something happened in {} !'.\
           format(pid) + local_time(counter))
     return counter
 
-def recv_message(pipe, pid, counter):
+def recv_message(counter, localtime):
     # recieve message code
-    print('Message received at ' + str(pid)  + local_time(counter))
+    print('Message received at ' + counter  + local_time(localtime))
 
 def send_message(port, counter):
     # api-endpoint
@@ -50,6 +47,8 @@ class Message(Resource):
         print("request param", args["lamport_time"])
         print("request param", args["local_time"])
 
+        recv_message(args["lamport_time"], args["local_time"])
+
         return {"status":"success"},200
     pass
 
@@ -57,10 +56,6 @@ api.add_resource(Message, "/message")
 
 def api_process(port):
     app.run(port=port)
-
-# def simluation():
-#     print("sending message")
-#     send_message(8000, 1)
 
 if __name__ == "__main__":
     # Construct the argument parser
@@ -77,13 +72,5 @@ if __name__ == "__main__":
 
     process1.start()
     time.sleep(2)
-
+    
     send_message(8000, 1)
-
-    # process2 = Process(target=simluation, args=())
-
-    # process1.start()
-    # process2.start()
-
-    # process1.join()
-    # process2.join()
