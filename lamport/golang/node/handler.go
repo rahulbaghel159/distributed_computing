@@ -1,4 +1,4 @@
-package golang
+package node
 
 import (
 	"github.com/gorilla/mux"

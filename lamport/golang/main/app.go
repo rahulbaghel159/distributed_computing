@@ -4,19 +4,19 @@ import (
 	"log"
 	"net/http"
 
+	node "github.com/baghelrahul159/distrbuted_computing/golang/node"
 	"github.com/gorilla/mux"
-	"github.com/baghelrahul159/distrbuted_computing/golang/node"
 )
 
 func main() {
 	//initialise node
-	node := InitNode()
+	n := node.InitNode()
 
 	//initialise router
 	router := mux.NewRouter()
 
 	//initialise handlers
-	InitHandler(router, node)
+	node.InitHandler(router, n)
 
 	//start local server
 	log.Fatal(http.ListenAndServe(":8080", router))
